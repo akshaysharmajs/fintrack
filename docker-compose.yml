@@ -1,0 +1,31 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: fintrack_db
+    ports:
+      - "5432:5432"
+  
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+  
+  app:
+    build: .
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - redis
+    environment:
+      DATABASE_URL: postgresql://user:password@db/fintrack_db
+      REDIS_URL: redis://redis:6379
+    
