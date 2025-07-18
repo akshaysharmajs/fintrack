@@ -1,10 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from datetime import datetime
 
 class TransactionCreate(BaseModel):
-    amount: float
-    category: str
-    description: str = ""
+    amount: float = Field(..., gt=0, description="Transaction amount must be > 0")
+    category: str = Field("", description="Leave blank for auto-categorization")
+    description: str = Field(..., min_length=1)
 
 class TransactionOut(TransactionCreate):
     id: int

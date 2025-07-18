@@ -10,4 +10,7 @@ def create_transaction(db: Session, user_id: int, tx_data: TransactionCreate):
     return tx
 
 def get_transactions(db: Session, user_id: int):
-    return db.query(Transaction).filter(Transaction.user_id == user_id).all()
+    return db.query(Transaction).filter(
+        Transaction.user_id == user_id,
+        Transaction.amount > 0
+    ).all()
